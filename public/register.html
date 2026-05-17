@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secrets — Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --gold: #c9a84c;
+      --text: #e8e0d0;
+      --muted: #6b6560;
+      --danger: #c0392b;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .orb-1 { width: 350px; height: 350px; background: #5e8b3c; top: -80px; left: -80px; }
+    .orb-2 { width: 300px; height: 300px; background: var(--gold); bottom: -60px; right: -60px; }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 52px 48px;
+      width: 420px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    h1 em { font-style: italic; color: var(--gold); }
+
+    .sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin-bottom: 36px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 20px;
+    }
+
+    input:focus { border-color: var(--gold); }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: #0d0d0d;
+      border: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn:hover { opacity: 0.85; }
+
+    .error-msg {
+      background: rgba(192,57,43,0.12);
+      border: 1px solid var(--danger);
+      color: #e74c3c;
+      font-size: 11px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .footer-link {
+      margin-top: 28px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    .footer-link a { color: var(--gold); text-decoration: none; }
+    .footer-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="card">
+    <p class="eyebrow">Create Account</p>
+    <h1><em>Join</em> the Vault</h1>
+    <p class="sub">Choose a username and password to protect your secrets.</p>
+    <div class="divider"></div>
+
+    <div class="error-msg" id="err"></div>
+
+    <form action="/register" method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" autocomplete="username" required placeholder="your_name">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="new-password" required placeholder="••••••••">
+
+      <button class="btn" type="submit">Create My Vault</button>
+    </form>
+
+    <p class="footer-link">Already have an account? <a href="/">Sign in &rarr;</a></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const errEl = document.getElementById('err');
+    const msgs = { empty: 'Username and password cannot be empty.', taken: 'That username is already taken.' };
+    const e = params.get('error');
+    if (msgs[e]) { errEl.textContent = msgs[e]; errEl.classList.add('show'); }
+  </script>
+</body>
+</html>
